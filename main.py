@@ -207,7 +207,6 @@ class AddressBook(UserDict):
                 to_return = records[start_index: len(records)]
             else:
                 raise StopIteration
-        self.page += 1
         return to_return
 
     @input_error
@@ -225,8 +224,9 @@ class AddressBook(UserDict):
         return "done"
 
     def show_all(self):
-        for i in iter(self):
-            result = "*" * 15 + "\n"
+        result = ""
+        for i in self:
+            result += "*" * 15 + "\n"
             for record in i:
                 result += str(record) + "\n"
             result += "*" * 15
@@ -245,6 +245,9 @@ class AddressBook(UserDict):
 def main():
 
     addressBook = AddressBook()
+
+    for x in range(35):
+        addressBook.add_record((f"name_{x}"), "", "", "")
 
     while True:
         user_input = input(">>> ")
