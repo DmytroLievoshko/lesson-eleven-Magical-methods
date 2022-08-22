@@ -183,6 +183,33 @@ class Record:
 
 
 class AddressBook(UserDict):
+
+    __items_per_page = 20
+
+    def items_per_page(self, value):
+        self.__items_per_page = value
+
+    def __iter__(self):
+        self.page = 0
+        return self
+
+    items_per_page = property(fget=None, fset=items_per_page)
+
+    def __next__(self):
+        records = list(self.data.values())
+        start_index = self.page * self.__items_per_page
+        end_index = (self.page + 1) * self.__items_per_page
+        self.page += 1
+        if len(records) > end_index:
+            to_return = records[start_index:end_index]
+        else:
+            if len(records) > start_index:
+                to_return = records[start_index: len(records)]
+            else:
+                raise StopIteration
+        self.page += 1
+        return to_return
+
     @input_error
     def add_record(self, name, phone, email, birthday):
         field_name = Name(name)
@@ -198,11 +225,11 @@ class AddressBook(UserDict):
         return "done"
 
     def show_all(self):
-        result = "*" * 15 + "\n"
-        for record in self.data.values():
-            result += str(record) + "\n"
-
-        result += "*" * 15
+        for i in iter(self):
+            result = "*" * 15 + "\n"
+            for record in i:
+                result += str(record) + "\n"
+            result += "*" * 15
         return result
 
     @input_error
