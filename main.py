@@ -223,15 +223,6 @@ class AddressBook(UserDict):
         self.data[record.name.value] = record
         return "done"
 
-    def show_all(self):
-        result = ""
-        for i in self:
-            result += "*" * 15 + "\n"
-            for record in i:
-                result += str(record) + "\n"
-            result += "*" * 15
-        return result
-
     @input_error
     def get_record(self, name):
         if name == "":
@@ -239,6 +230,15 @@ class AddressBook(UserDict):
         result = self.data.get(name)
         if not result:
             raise NoKeyInformation
+        return result
+
+    def show_all(self):
+        result = ""
+        for i in self:
+            result += "*" * 15 + "\n"
+            for record in i:
+                result += str(record) + "\n"
+            result += "*" * 15
         return result
 
 
